@@ -1,6 +1,7 @@
 import 'package:amary_cafe/feature/detail/detail_provider.dart';
 import 'package:amary_cafe/feature/detail/detail_state.dart';
 import 'package:amary_cafe/feature/detail/widget/body_detail_widget.dart';
+import 'package:amary_cafe/feature/detail/widget/fav_icon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +31,9 @@ class _DetailScreenState extends State<DetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Detail Cafe"),
+        actions: [
+          FavIconWidget()
+        ],
       ),
       body: Consumer<DetailProvider>(
         builder: (context, value, child) {
