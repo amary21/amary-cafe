@@ -29,6 +29,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
+          toolbarHeight: 70,
           title: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

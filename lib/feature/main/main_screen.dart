@@ -1,6 +1,7 @@
 import 'package:amary_cafe/feature/favorite/favorite_screen.dart';
 import 'package:amary_cafe/feature/home/home_screen.dart';
 import 'package:amary_cafe/feature/main/main_provider.dart';
+import 'package:amary_cafe/feature/setting/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +15,8 @@ class MainScreen extends StatelessWidget {
         builder: (context, value, child) {
           return switch (value.indexBottomNabBar) {
             0 => HomeScreen(),
-            _ => FavoriteScreen(),
+            1 => FavoriteScreen(),
+            _ => SettingScreen(),
           };
         },
       ),
@@ -33,6 +35,11 @@ class MainScreen extends StatelessWidget {
             icon: Icon(Icons.favorite),
             label: "Favorite",
             tooltip: "Favorite",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: "Setting",
+            tooltip: "Setting",
           ),
         ],
       ),

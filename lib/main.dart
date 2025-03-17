@@ -9,6 +9,7 @@ import 'package:amary_cafe/feature/detail/widget/fav_icon/fav_icon_provider.dart
 import 'package:amary_cafe/feature/favorite/favorite_provider.dart';
 import 'package:amary_cafe/feature/home/home_provider.dart';
 import 'package:amary_cafe/feature/main/main_provider.dart';
+import 'package:amary_cafe/feature/setting/setting_provider.dart';
 import 'package:amary_cafe/route/nav_host.dart';
 import 'package:amary_cafe/style/theme/cafe_theme.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,11 @@ void main() {
         ChangeNotifierProxyProvider<CafeRepository, FavIconProvider>(
           create: (context) => FavIconProvider(context.read<CafeRepository>()),
           update: (context, cafeRepository, previous) => FavIconProvider(cafeRepository)
-        )
+        ),
+        ChangeNotifierProxyProvider<CafeRepository, SettingProvider>(
+          create: (context) => SettingProvider(context.read<CafeRepository>()),
+          update: (context, cafeRepository, previous) => SettingProvider(cafeRepository)
+        ),
       ],
       child: AmaryCafe(),
     )
