@@ -1,3 +1,4 @@
+import 'package:amary_cafe/data/api/model/cafe.dart';
 import 'package:amary_cafe/feature/detail/detail_screen.dart';
 import 'package:amary_cafe/feature/main/main_screen.dart';
 import 'package:amary_cafe/route/nav_route.dart';
@@ -13,7 +14,7 @@ class NavHost {
       NavRoute.mainRoute.name: (context) => MainScreen(),
       NavRoute.detailRoute.name:
           (context) => DetailScreen(
-            id: ModalRoute.of(context)?.settings.arguments as String,
+            cafe: ModalRoute.of(context)?.settings.arguments as Cafe,
           ),
     };
   }

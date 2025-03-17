@@ -3,6 +3,7 @@ import 'package:amary_cafe/data/api/model/menu.dart';
 import 'package:amary_cafe/data/api/model/name.dart';
 import 'package:amary_cafe/data/api/model/detail.dart';
 import 'package:amary_cafe/data/api/model/review.dart';
+import 'package:amary_cafe/data/implementation/database/entity/cafe_entity.dart';
 import 'package:amary_cafe/data/implementation/remote/response/cafe_detail_item_response.dart';
 import 'package:amary_cafe/data/implementation/remote/response/cafe_menu_response.dart';
 import 'package:amary_cafe/data/implementation/remote/response/cafe_response.dart';
@@ -31,7 +32,8 @@ extension CafeDetailMapper on CafeDetailItemResponse {
       address: address,
       pictureId: pictureId,
       rating: rating,
-      categories: categories.map((element) => Name(name: element.name)).toList(),
+      categories:
+          categories.map((element) => Name(name: element.name)).toList(),
       menu: menus.toMenus(),
       reviews: reviews.map((elemet) => elemet.toReview()).toList(),
     );
@@ -50,5 +52,31 @@ extension MenusMapper on CafeMenuResponse {
 extension ReviewMapper on CafeReviewResponse {
   Review toReview() {
     return Review(name: name, review: review, date: date);
+  }
+}
+
+extension CafeModelToEnctityMapper on Cafe {
+  CafeEntity toEntity() {
+    return CafeEntity(
+      id: id,
+      name: name,
+      description: description,
+      pictureId: pictureId,
+      city: city,
+      rating: rating,
+    );
+  }
+}
+
+extension CafeEnctityToModelMapper on CafeEntity {
+  Cafe toModel() {
+    return Cafe(
+      id: id,
+      name: name,
+      description: description,
+      pictureId: pictureId,
+      city: city,
+      rating: rating,
+    );
   }
 }

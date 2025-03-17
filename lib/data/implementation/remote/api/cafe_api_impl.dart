@@ -8,7 +8,11 @@ class CafeApiImpl implements CafeApi {
   final String _baseUrl;
   final String _baseImageUrl;
 
-  CafeApiImpl(this._baseUrl, this._baseImageUrl);
+  CafeApiImpl({
+    required String baseUrl,
+    required String baseImageUrl,
+  }) : _baseUrl = baseUrl,
+       _baseImageUrl = baseImageUrl;
 
   @override
   Future<CafeListResponse> getCafeList() async {

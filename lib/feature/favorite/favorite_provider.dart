@@ -10,8 +10,17 @@ class FavoriteProvider extends ChangeNotifier {
   FavoriteState _state = FavoriteNoneState();
   FavoriteState get state => _state;
 
-  void getFavorite() {
-    _cafeRepository.getList(); //replace with local db
-    notifyListeners();
+  Future<void> getFavorite() async {
+    try {
+      _state = FavoriteLoadingState();
+      notifyListeners();
+
+      final result = await _cafeRepository.localGetAllItem();
+      _state = FavoriteLoadedState(result);
+      notifyListeners();
+    } on Exception catch (e) {
+      _state = FavoriteErrorState(e.toString());
+      notifyListeners();
+    }
   }
 }

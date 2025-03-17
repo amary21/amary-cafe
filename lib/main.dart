@@ -1,8 +1,11 @@
 import 'package:amary_cafe/data/api/repository/cafe_repository.dart';
+import 'package:amary_cafe/data/implementation/database/service/cafe_db_service.dart';
+import 'package:amary_cafe/data/implementation/database/service/cafe_db_service_impl.dart';
 import 'package:amary_cafe/data/implementation/remote/api/cafe_api.dart';
 import 'package:amary_cafe/data/implementation/remote/api/cafe_api_impl.dart';
 import 'package:amary_cafe/data/implementation/repository/cafe_repository_impl.dart';
 import 'package:amary_cafe/feature/detail/detail_provider.dart';
+import 'package:amary_cafe/feature/detail/widget/fav_icon/fav_icon_provider.dart';
 import 'package:amary_cafe/feature/favorite/favorite_provider.dart';
 import 'package:amary_cafe/feature/home/home_provider.dart';
 import 'package:amary_cafe/feature/main/main_provider.dart';
@@ -17,12 +20,22 @@ void main() {
       providers: [
         Provider<CafeApi>(
           create: (context) => CafeApiImpl(
-            "https://restaurant-api.dicoding.dev", //base url
-            "https://restaurant-api.dicoding.dev/images/medium/" //base image url
+            baseUrl: "https://restaurant-api.dicoding.dev",
+            baseImageUrl: "https://restaurant-api.dicoding.dev/images/medium/"
           )
         ),
-        ProxyProvider<CafeApi, CafeRepository>(
-          update: (context, cafeApi, _) => CafeRepositoryImpl(cafeApi)
+        Provider<CafeDbService>(
+          create: (context) => CafeDbServiceImpl(
+            databaseName: "amary-cafe.db", 
+            tableName: "cafe", 
+            version: 1
+          )
+        ),
+        ProxyProvider2<CafeApi, CafeDbService, CafeRepository>(
+          update: (context, cafeApi, cafeDbService, _) => CafeRepositoryImpl(
+            cafeApi: cafeApi, 
+            cafeDbService: cafeDbService
+          )
         ),
         ChangeNotifierProvider(
           create: (context) => MainProvider()
@@ -39,6 +52,10 @@ void main() {
           create: (context) => FavoriteProvider(context.read<CafeRepository>()),
           update: (context, cafeRepository, previous) => FavoriteProvider(cafeRepository),
         ),
+        ChangeNotifierProxyProvider<CafeRepository, FavIconProvider>(
+          create: (context) => FavIconProvider(context.read<CafeRepository>()),
+          update: (context, cafeRepository, previous) => FavIconProvider(cafeRepository)
+        )
       ],
       child: AmaryCafe(),
     )

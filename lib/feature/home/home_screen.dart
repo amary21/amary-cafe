@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.pushNamed(
                       context,
                       NavRoute.detailRoute.name,
-                      arguments: cafe.id,
+                      arguments: cafe,
                     );
                   },
                 );

@@ -1,14 +1,15 @@
+import 'package:amary_cafe/data/api/model/cafe.dart';
 import 'package:amary_cafe/feature/detail/detail_provider.dart';
 import 'package:amary_cafe/feature/detail/detail_state.dart';
 import 'package:amary_cafe/feature/detail/widget/body_detail_widget.dart';
-import 'package:amary_cafe/feature/detail/widget/fav_icon_widget.dart';
+import 'package:amary_cafe/feature/detail/widget/fav_icon/fav_icon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DetailScreen extends StatefulWidget {
-  final String id;
+  final Cafe cafe;
 
-  const DetailScreen({super.key, required this.id});
+  const DetailScreen({super.key, required this.cafe});
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -20,7 +21,7 @@ class _DetailScreenState extends State<DetailScreen> {
     final homeProvide = context.read<DetailProvider>();
 
     Future.microtask(() {
-      homeProvide.getDetail(widget.id);
+      homeProvide.getDetail(widget.cafe.id);
     });
 
     super.initState();
@@ -32,7 +33,7 @@ class _DetailScreenState extends State<DetailScreen> {
       appBar: AppBar(
         title: Text("Detail Cafe"),
         actions: [
-          FavIconWidget()
+          FavIconWidget(cafe: widget.cafe)
         ],
       ),
       body: Consumer<DetailProvider>(

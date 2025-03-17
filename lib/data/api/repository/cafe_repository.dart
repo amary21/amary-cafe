@@ -7,4 +7,12 @@ abstract class CafeRepository {
   Future<Detail> getDetail(String id);
 
   Future<List<Cafe>> getSearch(String value);
+
+  Future<int> localInsertItem(Cafe cafe);
+
+  Future<List<Cafe>> localGetAllItem();
+
+  Future<Cafe> localGetItemById(String id);
+
+  Future<int> localRemoveItem(String id);
 }

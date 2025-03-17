@@ -1,6 +1,8 @@
 import 'package:amary_cafe/data/api/model/cafe.dart';
 import 'package:amary_cafe/data/api/model/detail.dart';
 import 'package:amary_cafe/data/api/repository/cafe_repository.dart';
+import 'package:amary_cafe/data/implementation/database/entity/cafe_entity.dart';
+import 'package:amary_cafe/data/implementation/database/service/cafe_db_service.dart';
 import 'package:amary_cafe/data/implementation/mapper/cafe_mapper.dart';
 import 'package:amary_cafe/data/implementation/remote/api/cafe_api.dart';
 import 'package:amary_cafe/data/implementation/remote/response/cafe_detail_response.dart';
@@ -9,8 +11,13 @@ import 'package:amary_cafe/data/implementation/remote/response/cafe_response.dar
 
 class CafeRepositoryImpl implements CafeRepository {
   final CafeApi _cafeApi;
+  final CafeDbService _cafeDbService;
 
-  CafeRepositoryImpl(this._cafeApi);
+  CafeRepositoryImpl({
+    required CafeApi cafeApi,
+    required CafeDbService cafeDbService,
+  }) : _cafeApi = cafeApi,
+       _cafeDbService = cafeDbService;
 
   @override
   Future<List<Cafe>> getList() async {
@@ -51,6 +58,48 @@ class CafeRepositoryImpl implements CafeRepository {
         List<CafeResponse> cafeResponse = cafeListResponse.cafes;
         return cafeResponse.map((element) => element.toCafe()).toList();
       }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  Future<List<Cafe>> localGetAllItem() async {
+    try {
+      List<CafeEntity> cafeEntities = await _cafeDbService.getAllItem();
+      if (cafeEntities.isEmpty) {
+        return throw "Data not found";
+      } else {
+        return cafeEntities.map((entity) => entity.toModel()).toList();
+      }
+    } catch (e) {
+      return throw Exception(e);
+    }
+  }
+
+  @override
+  Future<Cafe> localGetItemById(String id) async {
+    try {
+      CafeEntity cafeEntity = await _cafeDbService.getItemById(id);
+      return cafeEntity.toModel();
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  Future<int> localInsertItem(Cafe cafe) async {
+    try {
+      return _cafeDbService.insertItem(cafe.toEntity());
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  Future<int> localRemoveItem(String id) {
+    try {
+      return _cafeDbService.removeItem(id);
     } catch (e) {
       throw Exception(e);
     }
