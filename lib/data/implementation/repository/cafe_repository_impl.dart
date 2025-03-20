@@ -4,6 +4,7 @@ import 'package:amary_cafe/data/api/repository/cafe_repository.dart';
 import 'package:amary_cafe/data/implementation/database/entity/cafe_entity.dart';
 import 'package:amary_cafe/data/implementation/database/service/cafe_db_service.dart';
 import 'package:amary_cafe/data/implementation/mapper/cafe_mapper.dart';
+import 'package:amary_cafe/data/implementation/preference/cafe_preference.dart';
 import 'package:amary_cafe/data/implementation/remote/api/cafe_api.dart';
 import 'package:amary_cafe/data/implementation/remote/response/cafe_detail_response.dart';
 import 'package:amary_cafe/data/implementation/remote/response/cafe_list_response.dart';
@@ -12,12 +13,15 @@ import 'package:amary_cafe/data/implementation/remote/response/cafe_response.dar
 class CafeRepositoryImpl implements CafeRepository {
   final CafeApi _cafeApi;
   final CafeDbService _cafeDbService;
+  final CafePreference _cafePreference;
 
   CafeRepositoryImpl({
     required CafeApi cafeApi,
     required CafeDbService cafeDbService,
+    required CafePreference cafePreference,
   }) : _cafeApi = cafeApi,
-       _cafeDbService = cafeDbService;
+       _cafeDbService = cafeDbService,
+       _cafePreference = cafePreference;
 
   @override
   Future<List<Cafe>> getList() async {
@@ -103,5 +107,25 @@ class CafeRepositoryImpl implements CafeRepository {
     } catch (e) {
       throw Exception(e);
     }
+  }
+
+  @override
+  Future<bool> getIsDarkTheme() async {
+    return await _cafePreference.getIsDarkTheme();
+  }
+
+  @override
+  Future<bool> getNotification() async {
+    return await _cafePreference.getNotification();
+  }
+
+  @override
+  Future<void> saveDarkTheme(bool isDarkTheme) async {
+    await _cafePreference.saveDarkTheme(isDarkTheme);
+  }
+
+  @override
+  Future<void> saveNotification(bool isNotify) async {
+    await _cafePreference.saveNotification(isNotify);
   }
 }

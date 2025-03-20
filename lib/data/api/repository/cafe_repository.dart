@@ -15,4 +15,12 @@ abstract class CafeRepository {
   Future<Cafe> localGetItemById(String id);
 
   Future<int> localRemoveItem(String id);
+
+  Future<void> saveDarkTheme(bool isDarkTheme);
+
+  Future<bool> getIsDarkTheme();
+
+  Future<void> saveNotification(bool isNotify);
+
+  Future<bool> getNotification();
 }
