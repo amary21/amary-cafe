@@ -1,5 +1,7 @@
 import 'package:amary_cafe/data/api/model/cafe.dart';
+import 'package:amary_cafe/data/api/model/dark_theme.dart';
 import 'package:amary_cafe/data/api/model/detail.dart';
+import 'package:amary_cafe/data/api/model/notify.dart';
 import 'package:amary_cafe/data/api/repository/cafe_repository.dart';
 import 'package:amary_cafe/data/implementation/database/entity/cafe_entity.dart';
 import 'package:amary_cafe/data/implementation/database/service/cafe_db_service.dart';
@@ -110,22 +112,24 @@ class CafeRepositoryImpl implements CafeRepository {
   }
 
   @override
-  Future<bool> getIsDarkTheme() async {
-    return await _cafePreference.getIsDarkTheme();
+  Future<DarkTheme> getIsDarkTheme() async {
+    final isDarkTheme = await _cafePreference.getIsDarkTheme();
+    return isDarkTheme.isEnableDarkTheme;
   }
 
   @override
-  Future<bool> getNotification() async {
-    return await _cafePreference.getNotification();
+  Future<Notify> getNotification() async {
+    final isNotify = await _cafePreference.getNotification();
+    return isNotify.isEnableNotify;
   }
 
   @override
-  Future<void> saveDarkTheme(bool isDarkTheme) async {
-    await _cafePreference.saveDarkTheme(isDarkTheme);
+  Future<void> saveDarkTheme(DarkTheme value) async {
+    await _cafePreference.saveDarkTheme(value.isEnable);
   }
 
   @override
-  Future<void> saveNotification(bool isNotify) async {
-    await _cafePreference.saveNotification(isNotify);
+  Future<void> saveNotification(Notify value) async {
+    await _cafePreference.saveNotification(value.isEnable);
   }
 }

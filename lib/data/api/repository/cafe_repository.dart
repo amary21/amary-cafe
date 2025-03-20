@@ -1,5 +1,7 @@
 import 'package:amary_cafe/data/api/model/cafe.dart';
+import 'package:amary_cafe/data/api/model/dark_theme.dart';
 import 'package:amary_cafe/data/api/model/detail.dart';
+import 'package:amary_cafe/data/api/model/notify.dart';
 
 abstract class CafeRepository {
   Future<List<Cafe>> getList();
@@ -16,11 +18,11 @@ abstract class CafeRepository {
 
   Future<int> localRemoveItem(String id);
 
-  Future<void> saveDarkTheme(bool isDarkTheme);
+  Future<void> saveDarkTheme(DarkTheme value);
 
-  Future<bool> getIsDarkTheme();
+  Future<DarkTheme> getIsDarkTheme();
 
-  Future<void> saveNotification(bool isNotify);
+  Future<void> saveNotification(Notify value);
 
-  Future<bool> getNotification();
+  Future<Notify> getNotification();
 }

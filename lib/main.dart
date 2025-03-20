@@ -97,13 +97,18 @@ class AmaryCafe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Amary Cafe',
-      theme: CafeTheme.lightTheme,
-      darkTheme: CafeTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      initialRoute: NavHost.initialHost,
-      routes: NavHost.host,
+    return Consumer<SettingProvider>(
+      builder: (context, provider, _) {
+        return MaterialApp(
+          title: 'Amary Cafe',
+          theme: CafeTheme.lightTheme,
+          darkTheme: CafeTheme.darkTheme,
+          themeMode: provider.darkTheme.isEnable 
+            ? ThemeMode.dark : ThemeMode.light,
+          initialRoute: NavHost.initialHost,
+          routes: NavHost.host,
+        );
+      }
     );
   }
 }
