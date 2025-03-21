@@ -14,4 +14,15 @@ class Cafe {
     required this.city,
     required this.rating,
   });
+
+  factory Cafe.empty() {
+    return Cafe(
+      id: "",
+      name: "",
+      description: "",
+      pictureId: "",
+      city: "",
+      rating: 0,
+    );
+  }
 }

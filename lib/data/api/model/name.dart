@@ -1,5 +1,9 @@
 class Name {
-    final String name;
+  final String name;
 
-    Name({required this.name});
+  Name({required this.name});
+
+  factory Name.empty() {
+    return Name(name: "");
+  }
 }
