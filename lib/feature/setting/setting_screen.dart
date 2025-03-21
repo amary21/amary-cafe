@@ -65,7 +65,6 @@ class _SettingScreenState extends State<SettingScreen> {
                     title: Text(state.name),
                     onChanged: (value) async {
                       provider.changeNotify(value!);
-                      await _showNotification();
                     },
                   );
                 },
@@ -77,7 +76,4 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  Future<void> _showNotification() async {
-    context.read<SettingProvider>().showNotification();
-  }
 }

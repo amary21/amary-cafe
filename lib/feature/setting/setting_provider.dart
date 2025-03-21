@@ -3,15 +3,13 @@ import 'package:amary_cafe/data/api/model/notify.dart';
 import 'package:amary_cafe/data/api/repository/cafe_repository.dart';
 import 'package:amary_cafe/service/notification_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class SettingProvider extends ChangeNotifier {
   final CafeRepository _cafeRepository;
   final NotificationService _notificationService;
 
-  SettingProvider(
-    this._cafeRepository,
-    this._notificationService,
-  );
+  SettingProvider(this._cafeRepository, this._notificationService);
 
   Notify _notify = Notify.disable;
   Notify get notify => _notify;
@@ -23,19 +21,28 @@ class SettingProvider extends ChangeNotifier {
   bool? _permission = false;
   bool? get permission => _permission;
 
-  Future<void> requestPermissions() async {
-   _permission = await _notificationService.requestPermissions();
-   notifyListeners();
+  List<PendingNotificationRequest> pendingNotificationRequests = [];
+
+  void scheduleDailyTenAMNotification() {
+    _notificationId += 1;
+    _notificationService.scheduleDailyTenAMNotification(id: _notificationId);
   }
 
-  void showNotification() {
-   _notificationId += 1;
-   _notificationService.showNotification(
-     id: _notificationId,
-     title: "New Notification",
-     body: "This is a new notification with id $_notificationId",
-     payload: "This is a payload from notification with id $_notificationId",
-   );
+  Future<void> checkPendingNotificationRequests(BuildContext context) async {
+    pendingNotificationRequests =
+        await _notificationService.pendingNotificationRequests();
+    notifyListeners();
+  }
+
+  Future<void> cancelNotification() async {
+    for (var item in pendingNotificationRequests) {
+      await _notificationService.cancelNotification(item.id);
+    }
+  }
+
+  Future<void> requestPermissions() async {
+    _permission = await _notificationService.requestPermissions();
+    notifyListeners();
   }
 
   Future<void> checkDarkTheme(bool isDarkTheme) async {
@@ -47,6 +54,11 @@ class SettingProvider extends ChangeNotifier {
   Future<void> changeNotify(Notify value) async {
     _cafeRepository.saveNotification(value);
     _notify = value;
+    if (value.isEnable) {
+      scheduleDailyTenAMNotification();
+    } else {
+      cancelNotification();
+    }
     notifyListeners();
   }
 
