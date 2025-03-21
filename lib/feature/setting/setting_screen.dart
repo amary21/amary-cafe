@@ -34,7 +34,7 @@ class _SettingScreenState extends State<SettingScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Dark Theme", style: Theme.of(context).textTheme.titleLarge),
+            Text("Dark Theme", style: Theme.of(context).textTheme.titleMedium),
             SizedBox.square(dimension: 4),
             ...DarkTheme.values.map(
               (state) => Consumer<SettingProvider>(
@@ -51,7 +51,10 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
             ),
             SizedBox.square(dimension: 20),
-            Text("Notification", style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              "Scheduled 11AM Notification",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             SizedBox.square(dimension: 4),
             ...Notify.values.map(
               (state) => Consumer<SettingProvider>(
@@ -62,6 +65,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     title: Text(state.name),
                     onChanged: (value) async {
                       provider.changeNotify(value!);
+                      await _showNotification();
                     },
                   );
                 },
@@ -71,5 +75,9 @@ class _SettingScreenState extends State<SettingScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _showNotification() async {
+    context.read<SettingProvider>().showNotification();
   }
 }

@@ -1,11 +1,5 @@
 import 'package:amary_cafe/data/api/repository/cafe_repository.dart';
-import 'package:amary_cafe/data/implementation/database/service/cafe_db_service.dart';
-import 'package:amary_cafe/data/implementation/database/service/cafe_db_service_impl.dart';
-import 'package:amary_cafe/data/implementation/preference/cafe_preference.dart';
-import 'package:amary_cafe/data/implementation/preference/cafe_preference_impl.dart';
-import 'package:amary_cafe/data/implementation/remote/api/cafe_api.dart';
-import 'package:amary_cafe/data/implementation/remote/api/cafe_api_impl.dart';
-import 'package:amary_cafe/data/implementation/repository/cafe_repository_impl.dart';
+import 'package:amary_cafe/data/di/cafe_module.dart';
 import 'package:amary_cafe/feature/detail/detail_provider.dart';
 import 'package:amary_cafe/feature/detail/widget/fav_icon/fav_icon_provider.dart';
 import 'package:amary_cafe/feature/favorite/favorite_provider.dart';
@@ -13,6 +7,8 @@ import 'package:amary_cafe/feature/home/home_provider.dart';
 import 'package:amary_cafe/feature/main/main_provider.dart';
 import 'package:amary_cafe/feature/setting/setting_provider.dart';
 import 'package:amary_cafe/route/nav_host.dart';
+import 'package:amary_cafe/service/notification_module.dart';
+import 'package:amary_cafe/service/notification_service.dart';
 import 'package:amary_cafe/style/theme/cafe_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,36 +21,14 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        Provider<CafeApi>(
-          create:
-              (context) => CafeApiImpl(
-                baseUrl: "https://restaurant-api.dicoding.dev",
-                baseImageUrl:
-                    "https://restaurant-api.dicoding.dev/images/medium/",
-              ),
+        ...cafeModule(
+          baseUrl: "https://restaurant-api.dicoding.dev",
+          baseImageUrl: "https://restaurant-api.dicoding.dev/images/medium/",
+          databaseName: "amary-cafe.db",
+          databaseVersion: 1,
+          preferences: preferences,
         ),
-        Provider<CafeDbService>(
-          create:
-              (context) => CafeDbServiceImpl(
-                databaseName: "amary-cafe.db",
-                tableName: "cafe",
-                version: 1,
-              ),
-        ),
-        Provider<CafePreference>(
-          create: (context) => CafePreferenceImpl(
-            preferences: preferences
-          )
-        ),
-        ProxyProvider3<CafeApi, CafeDbService, CafePreference, CafeRepository>(
-          update:
-              (context, cafeApi, cafeDbService, cafePreference, _) => 
-                CafeRepositoryImpl(
-                  cafeApi: cafeApi,
-                  cafeDbService: cafeDbService,
-                  cafePreference: cafePreference,
-                ),
-        ),
+        ...notificationModule(),
         ChangeNotifierProvider(create: (context) => MainProvider()),
         ChangeNotifierProxyProvider<CafeRepository, HomeProvider>(
           create: (context) => HomeProvider(context.read<CafeRepository>()),
@@ -80,11 +54,20 @@ void main() async {
               (context, cafeRepository, previous) =>
                   FavIconProvider(cafeRepository),
         ),
-        ChangeNotifierProxyProvider<CafeRepository, SettingProvider>(
-          create: (context) => SettingProvider(context.read<CafeRepository>()),
+        ChangeNotifierProxyProvider2<
+          CafeRepository,
+          NotificationService,
+          SettingProvider
+        >(
+          create:
+              (context) => SettingProvider(
+                context.read<CafeRepository>(),
+                context.read<NotificationService>(),
+              ),
           update:
-              (context, cafeRepository, previous) =>
-                  SettingProvider(cafeRepository),
+              (context, cafeRepository, notificationService, previous) =>
+                  SettingProvider(cafeRepository, notificationService)
+                    ..requestPermissions(),
         ),
       ],
       child: AmaryCafe(),
@@ -103,12 +86,12 @@ class AmaryCafe extends StatelessWidget {
           title: 'Amary Cafe',
           theme: CafeTheme.lightTheme,
           darkTheme: CafeTheme.darkTheme,
-          themeMode: provider.darkTheme.isEnable 
-            ? ThemeMode.dark : ThemeMode.light,
+          themeMode:
+              provider.darkTheme.isEnable ? ThemeMode.dark : ThemeMode.light,
           initialRoute: NavHost.initialHost,
           routes: NavHost.host,
         );
-      }
+      },
     );
   }
 }
