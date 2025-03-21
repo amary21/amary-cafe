@@ -45,9 +45,8 @@ class SettingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> checkDarkTheme(bool isDarkTheme) async {
-    _cafeRepository.saveDarkTheme(isDarkTheme.isEnableDarkTheme);
-    _darkTheme = isDarkTheme.isEnableDarkTheme;
+  Future<void> checkDarkTheme() async {
+    _darkTheme = await _cafeRepository.getIsDarkTheme();
     notifyListeners();
   }
 

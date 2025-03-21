@@ -67,7 +67,8 @@ void main() async {
           update:
               (context, cafeRepository, notificationService, previous) =>
                   SettingProvider(cafeRepository, notificationService)
-                    ..requestPermissions(),
+                    ..requestPermissions()
+                    ..checkDarkTheme(),
         ),
       ],
       child: AmaryCafe(),

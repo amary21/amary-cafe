@@ -29,7 +29,7 @@ class BodyDetailWidget extends StatelessWidget {
                         style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       Text(
-                        detail.address,
+                        "${detail.address}, ${detail.city}",
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                           fontWeight: FontWeight.w400,
                         ),
