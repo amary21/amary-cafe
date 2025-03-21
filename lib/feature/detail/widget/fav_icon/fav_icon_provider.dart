@@ -60,6 +60,7 @@ class FavIconProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       _message = "Failed to load your data";
+      _isFavorited = false;
       notifyListeners();
     }
   }
